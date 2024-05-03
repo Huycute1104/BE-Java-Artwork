@@ -1,6 +1,8 @@
 package com.example.artworksharing.serviceImplement;
 
 
+import com.example.artworksharing.Request.UserRequest.UpdateUserRequest;
+import com.example.artworksharing.Response.UserResponse.UpdateUserResponse;
 import com.example.artworksharing.enums.Role;
 import com.example.artworksharing.model.User;
 import com.example.artworksharing.repository.UserRepo;
@@ -32,4 +34,26 @@ public class UserImplement implements UserService {
                 .filter(user -> user.getRole() == Role.AUDIENCE || user.getRole() == Role.CREATOR)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public UpdateUserResponse updateUser(String email, UpdateUserRequest updateUserRequest) {
+        var existedUser = userRepo.findUserByEmail(email).orElse(null);
+        if (existedUser != null) {
+            existedUser.setAccountName(updateUserRequest.getName());
+            existedUser.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
+            existedUser.setPhone(updateUserRequest.getPhone());
+            userRepo.save(existedUser);
+            return UpdateUserResponse.builder()
+                    .status("Update User Successful")
+                    .user(existedUser)
+                    .build();
+        } else {
+            return UpdateUserResponse.builder()
+                    .status("User Not Found")
+                    .user(null)
+                    .build();
+
+        }
+    }
+
 }

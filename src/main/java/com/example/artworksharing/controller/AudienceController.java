@@ -1,6 +1,8 @@
 package com.example.artworksharing.controller;
 
 
+import com.example.artworksharing.Request.UserRequest.UpdateUserRequest;
+import com.example.artworksharing.Response.UserResponse.UpdateUserResponse;
 import com.example.artworksharing.model.User;
 import com.example.artworksharing.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,14 @@ public class AudienceController {
         return iUserService.getAll();
     }
 
-
+    @PutMapping("/updateUser/{email}")
+    @PreAuthorize("hasAuthority('audience:update')")
+    public ResponseEntity<UpdateUserResponse> updateUser(
+            @PathVariable String email,
+            @RequestBody UpdateUserRequest updateUserRequest) {
+//        UpdateUserResponse response = iUserService.updateUser(email, updateUserRequest);
+        return ResponseEntity.ok(iUserService.updateUser(email, updateUserRequest));
+    }
 
 
 

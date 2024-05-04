@@ -12,4 +12,5 @@ public interface UserService {
     public List<User> getAll();
     public UpdateUserResponse updateUser(String email, UpdateUserRequest updateUserRequest);
     public ChangeAvatarResponse changeAvatar(String email, MultipartFile file) throws IOException;
+    public UpdateUserResponse banUser(String email);
 }

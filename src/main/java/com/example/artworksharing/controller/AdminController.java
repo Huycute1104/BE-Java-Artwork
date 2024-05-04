@@ -29,6 +29,16 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+    @PutMapping("/unban/{email}")
+    @PreAuthorize("hasAuthority('admin:update')")
+    public ResponseEntity<UpdateUserResponse> unbanUser(@PathVariable String email) {
+        UpdateUserResponse response = iUserService.unbanUser(email);
+        if (response.getUser() != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 }
 
 

@@ -96,6 +96,26 @@ public class UserImplement implements UserService {
         }
     }
 
+    @Override
+    public UpdateUserResponse unbanUser(String email) {
+        var unbanUser = userRepo.findUserByEmail(email).orElse(null);
+//        var unbanUser = userRepo.findUserByUsersID(userID).orElse(null);
+        if (unbanUser != null) {
+            unbanUser.setUserStatus(true);
+            userRepo.save(unbanUser);
+            return UpdateUserResponse.builder()
+                    .status("UnBan User Successful")
+                    .user(unbanUser)
+                    .build();
+        } else {
+            return UpdateUserResponse.builder()
+                    .status("User Not Found")
+                    .user(null)
+                    .build();
+
+        }
+    }
+
     public User getUserInfo(String email) {
         User user = userRepo.findUserByEmail(email).orElse(null);
         if (user != null) {

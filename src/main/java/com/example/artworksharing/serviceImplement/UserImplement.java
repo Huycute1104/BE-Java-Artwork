@@ -2,7 +2,9 @@ package com.example.artworksharing.serviceImplement;
 
 
 import com.example.artworksharing.Request.UserRequest.UpdateUserRequest;
+import com.example.artworksharing.Response.UserResponse.ChangeAvatarResponse;
 import com.example.artworksharing.Response.UserResponse.UpdateUserResponse;
+import com.example.artworksharing.Util.ImageUtil;
 import com.example.artworksharing.enums.Role;
 import com.example.artworksharing.model.User;
 import com.example.artworksharing.repository.UserRepo;
@@ -54,6 +56,36 @@ public class UserImplement implements UserService {
                     .build();
 
         }
+    }
+
+    @Override
+    public ChangeAvatarResponse changeAvatar(String email, MultipartFile file) throws IOException {
+        var user = userRepo.findUserByEmail(email).orElse(null);
+        if (user != null) {
+            user.setAvatar(ImageUtil.compressImage(file.getBytes()));
+            userRepo.save(user);
+            return ChangeAvatarResponse.builder()
+                    .status("Update Avatar Successful")
+                    .user(getUserInfo(email))
+                    .build();
+        } else {
+            return ChangeAvatarResponse.builder()
+                    .status("User Not Found")
+                    .user(null)
+                    .build();
+        }
+    }
+    public User getUserInfo(String email) {
+        User user = userRepo.findUserByEmail(email).orElse(null);
+        if (user != null) {
+            byte[] compressedImage = user.getAvatar();
+            if (compressedImage != null && compressedImage.length > 0) {
+                byte[] decompressedImage = ImageUtil.decompressImage(compressedImage);
+                user.setAvatar(decompressedImage);
+            }
+            return user;
+        }
+        return null;
     }
 
 }

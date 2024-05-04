@@ -2,6 +2,7 @@ package com.example.artworksharing.controller;
 
 
 import com.example.artworksharing.Request.UserRequest.UpdateUserRequest;
+import com.example.artworksharing.Response.UserResponse.ChangeAvatarResponse;
 import com.example.artworksharing.Response.UserResponse.UpdateUserResponse;
 import com.example.artworksharing.model.User;
 import com.example.artworksharing.service.UserService;
@@ -43,7 +44,14 @@ public class AudienceController {
 //        UpdateUserResponse response = iUserService.updateUser(email, updateUserRequest);
         return ResponseEntity.ok(iUserService.updateUser(email, updateUserRequest));
     }
-
+    @PostMapping("/avatar/{email}")
+    @PreAuthorize("hasAuthority('audience:create')")
+    public ResponseEntity<ChangeAvatarResponse> changeAvatar(
+            @PathVariable String email,
+            @RequestParam("image") MultipartFile file) throws IOException {
+        ChangeAvatarResponse changeAvatar = iUserService.changeAvatar(email, file);
+        return ResponseEntity.ok(changeAvatar);
+    }
 
 
 }

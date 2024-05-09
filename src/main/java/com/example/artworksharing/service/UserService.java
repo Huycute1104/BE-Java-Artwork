@@ -14,4 +14,5 @@ public interface UserService {
     public ChangeAvatarResponse changeAvatar(String email, MultipartFile file) throws IOException;
     public UpdateUserResponse banUser(String email);
     public UpdateUserResponse unbanUser(String email);
+    public List<User> getCreator();
 }

@@ -1,6 +1,7 @@
 package com.example.artworksharing.controller;
 
 import com.example.artworksharing.Response.UserResponse.UpdateUserResponse;
+import com.example.artworksharing.model.User;
 import com.example.artworksharing.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,6 +39,11 @@ public class AdminController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+    }
+    @GetMapping("/creators")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public List<User> getCreators() {
+        return iUserService.getCreator();
     }
 }
 

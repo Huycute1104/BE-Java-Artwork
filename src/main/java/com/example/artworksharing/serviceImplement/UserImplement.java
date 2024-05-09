@@ -116,6 +116,12 @@ public class UserImplement implements UserService {
         }
     }
 
+    @Override
+    public List<User> getCreator() {
+        Role creatorRole = Role.CREATOR;
+        return userRepo.findByRole(creatorRole);
+    }
+
     public User getUserInfo(String email) {
         User user = userRepo.findUserByEmail(email).orElse(null);
         if (user != null) {

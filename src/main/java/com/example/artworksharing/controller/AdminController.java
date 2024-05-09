@@ -1,5 +1,7 @@
 package com.example.artworksharing.controller;
 
+import com.example.artworksharing.Request.UserRequest.SearchRequest;
+import com.example.artworksharing.Response.UserResponse.ResponseUser;
 import com.example.artworksharing.Response.UserResponse.UpdateUserResponse;
 import com.example.artworksharing.model.User;
 import com.example.artworksharing.service.UserService;
@@ -44,6 +46,12 @@ public class AdminController {
     @PreAuthorize("hasAuthority('admin:read')")
     public List<User> getCreators() {
         return iUserService.getCreator();
+    }
+
+    @GetMapping("/searchUser")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public ResponseEntity<ResponseUser> getAllUsers(@RequestBody SearchRequest req) {
+        return iUserService.searchUsers(req);
     }
 }
 

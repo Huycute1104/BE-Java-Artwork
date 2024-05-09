@@ -1,8 +1,10 @@
 package com.example.artworksharing.serviceImplement;
 
 
+import com.example.artworksharing.Request.UserRequest.SearchRequest;
 import com.example.artworksharing.Request.UserRequest.UpdateUserRequest;
 import com.example.artworksharing.Response.UserResponse.ChangeAvatarResponse;
+import com.example.artworksharing.Response.UserResponse.ResponseUser;
 import com.example.artworksharing.Response.UserResponse.UpdateUserResponse;
 import com.example.artworksharing.Util.ImageUtil;
 import com.example.artworksharing.enums.Role;
@@ -120,6 +122,29 @@ public class UserImplement implements UserService {
     public List<User> getCreator() {
         Role creatorRole = Role.CREATOR;
         return userRepo.findByRole(creatorRole);
+    }
+
+    @Override
+    public ResponseEntity<ResponseUser> searchUsers(SearchRequest req) {
+        try {
+            List<User> userList = userRepo.findAll();
+            if(req.getUserId() != null){
+                userList = userList.stream().filter(n -> n.getUsersID() == req.getUserId()).toList();
+            }
+            if(req.getName() != null && !req.getName().trim().isEmpty()){
+                userList = userList.stream().filter(n -> n.getUsername().contains(req.getName())).toList();
+            }
+            if(req.getEmail() != null && !req.getEmail().trim().isEmpty()){
+                userList = userList.stream().filter(n -> n.getEmail().contains(req.getEmail())).toList();
+            }
+            return ResponseEntity.ok(new ResponseUser("Success","List users", userList));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ResponseUser.builder()
+                    .status("Fail")
+                    .message("List user fail")
+                    .userList(null)
+                    .build());
+        }
     }
 
     public User getUserInfo(String email) {
